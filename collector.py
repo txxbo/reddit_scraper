@@ -1,9 +1,7 @@
-import praw
 import time
 from psaw import PushshiftAPI
-from scraper.parser import parse_all
 from datetime import datetime, timedelta
-from scraper import config, db, get_reddit, inspector, new_submission
+from scraper import db, get_reddit, new_submission
 
 
 def collect():

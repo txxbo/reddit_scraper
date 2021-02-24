@@ -1,8 +1,5 @@
-import asyncio
-import asyncpraw
 import time
-import scraper
-from scraper import config, new_submission, new_comment, db, get_reddit
+from scraper import new_submission, new_comment, db, get_reddit
 
 
 def listener():
@@ -38,4 +35,3 @@ def listener():
 if __name__ == "__main__":
     print('Listening...')
     listener()
-    #pass #asyncio.run(listen())
