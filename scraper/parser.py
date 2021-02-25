@@ -15,11 +15,12 @@ def parse_submission(submission) -> dict:
         'body_image_URL': submission.url if submission.url.endswith((
             '.jpg', '.png', '.gif', '.jpeg')) else '',
         'body_text': submission.selftext,
-        'comments': parse_comments(submission.comments),
+        'timestamp': submission.created_utc,
         'vote': submission.score,
         'comment_count': submission.num_comments,
         'percent_upvoted': int(100 * submission.upvote_ratio),
         'subreddit': submission.subreddit.display_name,
+        'comments': parse_comments(submission.comments),
     }
 
 
