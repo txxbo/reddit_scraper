@@ -15,7 +15,8 @@ def parse_submission(submission) -> dict:
         'body_image_URL': submission.url if submission.url.endswith((
             '.jpg', '.png', '.gif', '.jpeg')) else '',
         'body_text': submission.selftext,
-        'timestamp': submission.created_utc,
+        'timestamp':
+            datetime.fromtimestamp(submission.created_utc).isoformat(),
         'vote': submission.score,
         'comment_count': submission.num_comments,
         'percent_upvoted': int(100 * submission.upvote_ratio),
@@ -53,7 +54,8 @@ def parse_comment(comment):
         'comment_id': comment.id,
         'comment_body': comment.body,
         'vote': comment.score,
-        'timestamp': comment.created_utc,
+        'timestamp':
+            datetime.fromtimestamp(comment.created_utc).isoformat(),
         'comment_author': name,
         'comment_author_karma': karma,
         'comment_author_cake_day': cake_day,

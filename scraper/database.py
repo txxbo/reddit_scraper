@@ -27,6 +27,9 @@ class Database:
 
     # send back to nodechef
     def post_submission(self, subreddit, submission) -> bool:
+        if submission['author_karma'] <= 0:
+            return False
+
         response = requests.post(url=f'{self.url}{subreddit}',
                                  headers=self.get_headers(),
                                  json=submission)
