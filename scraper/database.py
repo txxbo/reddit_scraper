@@ -28,21 +28,11 @@ class Database:
 
     # send back to nodechef
     def post_submission(self, subreddit, submission) -> bool:
-        if submission['author_karma'] <= 0:
-            return False
+        response = requests.post(url=f'{self.url}{subreddit}',
+                                 headers=self.get_headers(),
+                                 json=submission)
 
-        text = submission['body_text'] + submission['title']
-        if any(word in text for word in self.tickers) \
-                or any('$'+word in text.upper() for word in self.tickers):
-
-            response = requests.post(url=f'{self.url}{subreddit}',
-                                     headers=self.get_headers(),
-                                     json=submission)
-
-            return response.status_code == 201
-
-        # no symbol found in post
-        return False
+        return response.status_code == 201
 
     def post_comment(self, subreddit, submission_id, comment):
         query = {
