@@ -21,6 +21,7 @@ def parse_submission(tickers, submission) -> dict:
             'body_image_URL': submission.url if submission.url.endswith((
                 '.jpg', '.png', '.gif', '.jpeg')) else '',
             'body_text': submission.selftext,
+            'unix_timestamp': submission.created_utc,
             'timestamp':
                 datetime.fromtimestamp(submission.created_utc).isoformat(),
             'vote': submission.score,
@@ -61,6 +62,7 @@ def parse_comment(comment):
         'comment_id': comment.id,
         'comment_body': comment.body,
         'vote': comment.score,
+        'unix_timestamp': comment.created_utc,
         'timestamp':
             datetime.fromtimestamp(comment.created_utc).isoformat(),
         'comment_author': name,
