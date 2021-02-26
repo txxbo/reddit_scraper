@@ -32,15 +32,12 @@ class Database:
             return False
 
         text = submission['body_text'] + submission['title']
-        if any(word in text.upper() for word in self.tickers):
+        if any(word in text for word in self.tickers) \
+                or any('$'+word in text.upper() for word in self.tickers):
 
             response = requests.post(url=f'{self.url}{subreddit}',
                                      headers=self.get_headers(),
                                      json=submission)
-
-            if not response.status_code == 201:
-                print(submission)
-                print(response.status_code, response.text)
 
             return response.status_code == 201
 
