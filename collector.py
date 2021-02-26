@@ -1,7 +1,7 @@
 import time
 from psaw import PushshiftAPI
 from datetime import datetime, timedelta
-from scraper import db, get_reddit, new_submission
+from scraper import db, get_reddit, new_submission, tickers
 
 
 def collect():
@@ -13,6 +13,7 @@ def collect():
 
     initial = time.time()
     while True:
+
         current_date, next_date = get_dates()
 
         if next_date > datetime.utcnow():
@@ -37,6 +38,7 @@ def collect():
                 new_submission.delay(subreddit['name'], submission.id)
 
         write_date(next_date)
+
 
     final = time.time()
     print(f"Time: {round(final-initial, 1)} seconds")
@@ -85,4 +87,8 @@ def get_submissions_by_date_range(subreddit,
 
 
 if __name__ == '__main__':
-    collect()
+    if len(tickers) > 0:
+        print('Listening...')
+        collect()
+    else:
+        print(f"No tickers found.")

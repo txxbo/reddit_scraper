@@ -5,8 +5,9 @@ import json
 
 # get list of subreddits from parse server api
 class Database:
-    def __init__(self, config):
+    def __init__(self, config, tickers):
         self.config = config
+        self.tickers = tickers
         self.url = config['database_url']
 
     def get_subreddits(self) -> list:
@@ -30,14 +31,21 @@ class Database:
         if submission['author_karma'] <= 0:
             return False
 
-        response = requests.post(url=f'{self.url}{subreddit}',
-                                 headers=self.get_headers(),
-                                 json=submission)
+        text = submission['body_text'] + submission['title']
+        if any(word in text.upper() for word in self.tickers):
 
-        if not response.status_code == 201:
-            print(response.status_code, response.text)
+            response = requests.post(url=f'{self.url}{subreddit}',
+                                     headers=self.get_headers(),
+                                     json=submission)
 
-        return response.status_code == 201
+            if not response.status_code == 201:
+                print(submission)
+                print(response.status_code, response.text)
+
+            return response.status_code == 201
+
+        # no symbol found in post
+        return False
 
     def post_comment(self, subreddit, submission_id, comment):
         query = {

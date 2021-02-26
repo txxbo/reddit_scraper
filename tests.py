@@ -70,7 +70,7 @@ def get_dates(delta=60*24*30):
         next_date = d+timedelta(minutes=delta)
         return d, next_date
 
-write_date(datetime(2020,10,1,0,0))
+write_date(datetime(2020,11,1,0,0))
 exit()
 
 while True:

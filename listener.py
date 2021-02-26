@@ -1,5 +1,5 @@
 import time
-from scraper import new_submission, new_comment, db, get_reddit
+from scraper import new_submission, new_comment, db, get_reddit, tickers
 
 
 def listener():
@@ -33,5 +33,8 @@ def listener():
 
 
 if __name__ == "__main__":
-    print('Listening...')
-    listener()
+    if len(tickers) > 0:
+        print('Listening...')
+        listener()
+    else:
+        print(f"No tickers found.")

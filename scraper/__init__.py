@@ -1,9 +1,11 @@
 import os
 import praw
+import json
 from celery import Celery
 from dotenv import load_dotenv
 from scraper.database import Database
 from scraper.parser import parse_submission, parse_comment
+
 
 load_dotenv()
 config = {
@@ -22,14 +24,32 @@ reddit = praw.Reddit(
     user_agent=config['user_agent'])
 
 
+def get_tickers():
+    try:
+        with open('tickers.json', 'r') as f:
+            data = f.read()
+            items = json.loads(data)['data']['rows']
+            item_list = []
+            for item in items:
+                if len(item['symbol']) > 2:
+                    item_list.append(item['symbol'])
+            return item_list
+    except:
+        print(f"Could not open tickers")
+        return []
+
+
 def get_reddit():
     return reddit
 
 
 app = Celery('tasks',
              broker=config['redis_uri'])
-inspector = app.control.inspect()
-db = Database(config)
+
+
+tickers = get_tickers()
+
+db = Database(config, tickers)
 
 
 @app.task
@@ -39,7 +59,6 @@ def new_comment(subreddit_name, comment_id):
     if db.post_comment(subreddit_name, comment.submission.id, item):
         # print(f"Wrote {item['comment_id']} to database")
         return True
-
     # print(f"C: Error:  {item['comment_id']} ")
     return False
 
@@ -51,6 +70,6 @@ def new_submission(subreddit_name, submission_id):
     if db.post_submission(subreddit_name, item):
         # print(f"Wrote {item['post_id']} to database")
         return True
-
     # print(f"S: Error: {item['post_id']} ")
     return False
+
