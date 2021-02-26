@@ -66,7 +66,9 @@ def new_comment(subreddit_name, comment_id):
 @app.task
 def new_submission(subreddit_name, submission_id):
     submission = reddit.submission(submission_id)
-    item = parse_submission(submission)
+    item = parse_submission(tickers, submission)
+    if item == {}:
+        return False
     if db.post_submission(subreddit_name, item):
         # print(f"Wrote {item['post_id']} to database")
         return True
